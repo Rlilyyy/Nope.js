@@ -1,12 +1,17 @@
 (function() {
 	var root = this === window ? this : window;
 
+
+	// IE 8+, FireFox 3.5+, Safari 3.1+, Chrome, Opera 10+
 	var np = function(selector) {
 		var context = 
-			this === root ? 
-				context = document : context = this;
+			this.length > 0 ? 
+				this[0] : this === root ?
+					document : this;
 		
-		return context.querySelectorAll(selector);
+		var result = context.querySelectorAll(selector);
+			result.np = np;
+		return result;
 	};
 
 	root.np = np;
