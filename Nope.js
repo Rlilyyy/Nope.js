@@ -1,7 +1,13 @@
 (function() {
 	var root = this === window ? this : window;
 
-	var np = function() {};
+	var np = function(selector) {
+		var context = 
+			this === root ? 
+				context = document : context = this;
+		
+		return context.querySelectorAll(selector);
+	};
 
 	root.np = np;
 
