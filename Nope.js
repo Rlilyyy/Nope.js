@@ -41,6 +41,37 @@
 		return result;
 	}
 
+	// 获取节点的第一个元素节点
+	np.firstElement = function(parentNode) {
+
+		if(!!document.body.firstElementChild) {
+			// IE 9+, FireFox 3.5+, Safari 4+, Chrome, Opera 10+
+			return parentNode.firstElementChild;
+		}else {
+			// 所有主流浏览器
+			var childNodes = parentNode.childNodes;
+			for(var i=0;i<childNodes.length;i++) {
+				if(childNodes[i].nodeType == 1)
+					return childNodes[i];
+			}
+		}
+	}
+
+	np.lastElement = function(parentNode) {
+
+		if(!!document.body.lastElementChild) {
+			// IE 9+, FireFox 3.5+, Safari 4+, Chrome, Opera 10+
+			return parentNode.lastElementChild;
+		}else {
+			// 所有主流浏览器
+			var childNodes = parentNode.childNodes;
+			for(var i=childNodes.length-1;i>=0;i--) {
+				if(childNodes[i].nodeType == 1)
+					return childNodes[i];
+			}
+		}
+	}
+
 	// 性能相对较差，但是兼容性最好
 	np.isFunction = function(func) {
 		return toString.call(func) === "[object Function]";
