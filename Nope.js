@@ -11,6 +11,11 @@
 		
 		var result = context.querySelectorAll(selector);
 			result.np = np;
+
+		for(var idx in np) {
+			result[idx] = np[idx];
+		}
+		
 		return result;
 	};
 
@@ -86,7 +91,6 @@
 
 	// 判断property是object的原型的属性而非构造函数的属性
 	np.hasPrototypeProperty = function(object, property) {
-
 		return !object.hasOwnProperty(property) && (property in object);
 	}
 
