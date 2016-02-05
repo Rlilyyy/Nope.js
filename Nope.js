@@ -68,6 +68,7 @@
 		}
 	}
 
+	// 获取节点的最后一个元素节点
 	np.lastElement = function(parentNode) {
 
 		if(!!document.body.lastElementChild) {
@@ -79,6 +80,50 @@
 			for(var i=childNodes.length-1;i>=0;i--) {
 				if(childNodes[i].nodeType == 1)
 					return childNodes[i];
+			}
+		}
+	}
+
+	// 判断property是object的原型的属性而非构造函数的属性
+	np.hasPrototypeProperty = function(object, property) {
+
+		return !object.hasOwnProperty(property) && (property in object);
+	}
+
+	// 获取childNode的前一个兄弟元素节点
+	// 所有主流浏览器，包括IE 6+
+	np.previousElementSibling = function(childNode) {
+
+		if(np.hasPrototypeProperty(document.body, "previousElementSibling")) {
+			// IE 9+, FireFox 3.5+, Safari 4+, Chrome, Opera 10+
+			return childNode.previousElementSibling;
+		}else {
+			// 所有主流浏览器
+			var previousSibling = childNode.previousSibling;
+
+			if(previousSibling.nodeType == 1) {
+				return previousSibling;
+			}else {
+				return np.previousElementSibling(previousSibling);
+			}
+		}
+	}
+
+	// 获取childNode的下一个兄弟元素节点
+	// 所有主流浏览器，包括IE 6+
+	np.nextElementSibling = function(childNode) {
+
+		if(np.hasPrototypeProperty(document.body, "nextElementSibling")) {
+			// IE 9+, FireFox 3.5+, Safari 4+, Chrome, Opera 10+
+			return childNode.nextElementSibling;
+		}else {
+			// 所有主流浏览器
+			var nextSibling = childNode.nextSibling;
+
+			if(nextSibling.nodeType == 1) {
+				return nextSibling;
+			}else {
+				return np.nextElementSibling(nextSibling);
 			}
 		}
 	}
