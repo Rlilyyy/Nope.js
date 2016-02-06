@@ -60,7 +60,7 @@
 	// 获取节点的第一个元素节点
 	np.firstElement = function(parentNode) {
 
-		if(!!document.body.firstElementChild) {
+		if("firstElementChild" in document) {
 			// IE 9+, FireFox 3.5+, Safari 4+, Chrome, Opera 10+
 			return parentNode.firstElementChild;
 		}else {
@@ -76,7 +76,7 @@
 	// 获取节点的最后一个元素节点
 	np.lastElement = function(parentNode) {
 
-		if(!!document.body.lastElementChild) {
+		if("lastElementChild" in document) {
 			// IE 9+, FireFox 3.5+, Safari 4+, Chrome, Opera 10+
 			return parentNode.lastElementChild;
 		}else {
@@ -98,7 +98,7 @@
 	// 所有主流浏览器，包括IE 6+
 	np.previousElementSibling = function(childNode) {
 
-		if(np.hasPrototypeProperty(document.body, "previousElementSibling")) {
+		if("previousElementSibling" in document.body) {
 			// IE 9+, FireFox 3.5+, Safari 4+, Chrome, Opera 10+
 			return childNode.previousElementSibling;
 		}else {
@@ -117,7 +117,7 @@
 	// 所有主流浏览器，包括IE 6+
 	np.nextElementSibling = function(childNode) {
 
-		if(np.hasPrototypeProperty(document.body, "nextElementSibling")) {
+		if("nextElementSibling" in document.body) {
 			// IE 9+, FireFox 3.5+, Safari 4+, Chrome, Opera 10+
 			return childNode.nextElementSibling;
 		}else {
