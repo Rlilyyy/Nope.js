@@ -118,7 +118,7 @@
 	// 获取childNode的下一个兄弟元素节点
 	// 所有主流浏览器，包括IE 6+
 	np.nextElementSibling = function(childNode) {
-		
+
 		if(ElementTravelSupport) {
 			// IE 9+, FireFox 3.5+, Safari 4+, Chrome, Opera 10+
 			return childNode.nextElementSibling;
@@ -131,6 +131,19 @@
 			}
 
 			return nextSibling;
+		}
+	}
+
+	np.removeClass = function(node, className) {
+		
+		var classList = node.className.split(/\s+/);
+
+		for(var idx in classList) {
+			if(classList[idx] == className) {
+				classList.splice(idx, 1);
+				node.className = classList.join(" ");
+				break;
+			}
 		}
 	}
 
