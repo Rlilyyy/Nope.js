@@ -25,7 +25,8 @@
 		ObjProto = Object.prototype,
 		toString = ObjProto.toString;
 
-	var ElementTravelSupport = ("firstElementChild" in document);
+	var ElementTravelSupport = ("firstElementChild" in document),
+		classListSupport = ("classList" in document.body);
 
 	// 浅复制一个对象
 	np.simpleCopy = function(obj) {
@@ -135,14 +136,20 @@
 	}
 
 	np.removeClass = function(node, className) {
-		
-		var classList = node.className.split(/\s+/);
 
-		for(var idx in classList) {
-			if(classList[idx] == className) {
-				classList.splice(idx, 1);
-				node.className = classList.join(" ");
-				break;
+		if(classListSupport) {
+			// FireFox 3.6+, chrome
+			node.remove(className);
+		}else {
+			// 所有主流浏览器
+			var classList = node.className.split(/\s+/);
+
+			for(var idx in classList) {
+				if(classList[idx] == className) {
+					classList.splice(idx, 1);
+					node.className = classList.join(" ");
+					break;
+				}
 			}
 		}
 	}
