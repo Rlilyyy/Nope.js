@@ -36,7 +36,6 @@
 		var result = {};
 
 		for(var idx in obj) {
-			console.log(idx)
 			result[idx] = obj[idx];
 		}
 
@@ -135,11 +134,12 @@
 		}
 	}
 
+	// 删除node的className类
 	np.removeClass = function(node, className) {
 
 		if(classListSupport) {
 			// FireFox 3.6+, chrome
-			node.remove(className);
+			node.classList.remove(className);
 		}else {
 			// 所有主流浏览器
 			var classList = node.className.split(/\s+/);
@@ -152,6 +152,16 @@
 				}
 			}
 		}
+	}
+
+	// 所有主流浏览器，对于documentElement和body的不同，根据compatMode，由使用者自己鉴定传入值
+	np.scrollToBottom = function(node) {
+		node.scrollTop = node.scrollHeight;
+	}
+
+	// 所有主流浏览器
+	np.scrollToTop = function(node) {
+		node.scrollTop = 0;
 	}
 
 	// 性能相对较差，但是兼容性最好
