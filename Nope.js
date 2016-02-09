@@ -26,7 +26,8 @@
 		toString = ObjProto.toString;
 
 	var ElementTravelSupport = ("firstElementChild" in document),
-		classListSupport = ("classList" in document.body);
+		classListSupport = ("classList" in document.body),
+		DOM2EventSupport = ("addEventListener" in document.body);
 
 	// 浅复制一个对象
 	np.simpleCopy = function(obj) {
@@ -151,6 +152,37 @@
 					break;
 				}
 			}
+		}
+	}
+
+	// 事件监听添加
+	np.addEventListener = function(node, type, handler) {
+		if(DOM2EventSupport) {
+			node.addEventListener(type, handler,false);
+		}else {
+			// eventQuene为事件队列
+			if(np.isFunction(node["on" + type]) && np.isObjectOfStrict(node["on" + type].eventQuene)) {
+				node["on" + type].eventQuene[handler] = handler;
+			}else {
+
+				node["on" + type] = function() {
+					for(var idx in this["on" + type].eventQuene) {
+						this["on" + type].eventQuene[idx]();
+					}
+				}
+				node["on" + type].eventQuene = {};
+				node["on" + type].eventQuene[handler] = handler;
+			}
+		}
+	}
+
+	// 事件监听删除
+	np.removeEventListener = function(node, type, handler) {
+		if(DOM2EventSupport) {
+			node.removeEventListener(type, handler, false);
+		}else {
+			if(np.isFunction(node["on" + type]))
+				delete node["on" + type].eventQuene[handler];
 		}
 	}
 
