@@ -4,28 +4,30 @@
 
 	// IE 8+, FireFox 3.5+, Safari 3.1+, Chrome, Opera 10+
 	var np = function(selector) {
-		var context = 
-			this.length > 0 ? 
+		var context =
+			this.length > 0 ?
 				this[0] : this === root ?
 					document : this;
-		
+
 		var result = context.querySelectorAll(selector);
 			result.np = np;
 
 		for(var idx in np) {
 			result[idx] = np[idx];
 		}
-		
+
 		return result;
 	};
 
 	root.np = np;
 
-	var nativeCreate = Object.create,
+	var
+		nativeCreate = Object.create,
 		ObjProto = Object.prototype,
 		toString = ObjProto.toString;
 
-	var ElementTravelSupport = ("firstElementChild" in document),
+	var
+		ElementTravelSupport = ("firstElementChild" in document),
 		classListSupport = ("classList" in document.body),
 		DOM2EventSupport = ("addEventListener" in document.body);
 
@@ -196,10 +198,19 @@
 		node.scrollTop = 0;
 	}
 
-	// 性能相对较差，但是兼容性最好
-	np.isFunction = function(func) {
-		return toString.call(func) === "[object Function]";
+	var typeArray = ['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp', 'Error'];
+	var iteratee = function(name) {
+		np["is" + name] = function(obj) {
+			return toString.call(obj) == "[object " + name + "]";
+		}
 	}
+	for(var idx in typeArray) {
+		iteratee(typeArray[idx]);
+	}
+	// // 性能相对较差，但是兼容性最好
+	// np.isFunction = function(func) {
+	// 	return toString.call(func) === "[object Function]";
+	// }
 
 	// Chrome 12和Safari 5及各自之前的版本下，typeof对正则表达式返回function
 	// IE 8及之前的版本下，所有Function类型均被typeof识别为Object（因JScript独立于浏览器以外）
@@ -221,5 +232,5 @@
 		return typeof(obj) === "object" && !!obj;
 	}
 
-	
+
 })();
