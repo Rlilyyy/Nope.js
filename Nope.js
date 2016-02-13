@@ -24,7 +24,8 @@
 	var
 		nativeCreate = Object.create,
 		ObjProto = Object.prototype,
-		toString = ObjProto.toString;
+		toString = ObjProto.toString,
+		hasOwnProperty = Object.hasOwnProperty;
 
 	var
 		ElementTravelSupport = ("firstElementChild" in document),
@@ -96,7 +97,11 @@
 
 	// 判断property是object的原型的属性而非构造函数的属性
 	np.hasPrototypeProperty = function(object, property) {
-		return !object.hasOwnProperty(property) && (property in object);
+		return !hasOwnProperty.call(object, property) && (property in object);
+	}
+
+	np.hasConstructorProperty = function(object, property) {
+		return hasOwnProperty.call(object, property) && !!object;
 	}
 
 	// 获取childNode的前一个兄弟元素节点
@@ -198,6 +203,20 @@
 		node.scrollTop = 0;
 	}
 
+	np.each = function(obj, iteratee, context) {
+
+	}
+
+	np.allKeys = function(obj) {
+		if(!np.isObject(obj))	return [];
+		var keys = [];
+
+		for(var key in obj)	keys.push(key);
+
+		return keys;
+	}
+
+	// isArguments, isFunction, isString, isNumber, isDate, isRegExp, isError函数
 	var typeArray = ['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp', 'Error'];
 	var iteratee = function(name) {
 		np["is" + name] = function(obj) {
@@ -207,10 +226,6 @@
 	for(var idx in typeArray) {
 		iteratee(typeArray[idx]);
 	}
-	// // 性能相对较差，但是兼容性最好
-	// np.isFunction = function(func) {
-	// 	return toString.call(func) === "[object Function]";
-	// }
 
 	// Chrome 12和Safari 5及各自之前的版本下，typeof对正则表达式返回function
 	// IE 8及之前的版本下，所有Function类型均被typeof识别为Object（因JScript独立于浏览器以外）
