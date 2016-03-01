@@ -1,6 +1,5 @@
 (function() {
-	var root = this === window ? this : window;
-
+	var root = this;
 
 	// IE 8+, FireFox 3.5+, Safari 3.1+, Chrome, Opera 10+
 	var np = function(selector) {
@@ -19,7 +18,9 @@
 		return result;
 	};
 
-	root.np = np;
+	typeof exports != "undefined" && !exports.nodeType ?
+			(typeof module != "undefined" && !module.nodeType && module.exports != null ?
+				exports = module.exports = np : exports.np = np) : root.np = np;
 
 	var
 		nativeCreate = Object.create,
@@ -165,20 +166,22 @@
 	// 事件监听添加
 	np.addEventListener = function(node, type, handler) {
 		if(DOM2EventSupport) {
-			node.addEventListener(type, handler,false);
+			node.addEventListener(type, handler, false);
 		}else {
 			// eventQuene为事件队列
 			if(np.isFunction(node["on" + type]) && np.isObjectOfStrict(node["on" + type].eventQuene)) {
 				node["on" + type].eventQuene[handler] = handler;
-			}else {
+			}else if(np.isFunction(node["on" + type])) {
+				node["on" + type].eventQuene = {};
+				node["on" + type].eventQuene[handler] = handler;
 
 				node["on" + type] = function() {
 					for(var idx in this["on" + type].eventQuene) {
 						this["on" + type].eventQuene[idx]();
 					}
 				}
-				node["on" + type].eventQuene = {};
-				node["on" + type].eventQuene[handler] = handler;
+			}else {
+				throw new Error("node is no an element");
 			}
 		}
 	}
@@ -217,7 +220,9 @@
 	}
 
 	// isArguments, isFunction, isString, isNumber, isDate, isRegExp, isError函数
-	var typeArray = ['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp', 'Error'];
+	// isFunction在IE8-下仍会有错误，一些核心的函数例如document.getElementById会被认为是Object
+	// 任何以COM对象构造的函数都将被IE识别为Object，无论哪种判断方法
+	var typeArray = ['Arguments', 'Function', 'Array', 'String', 'Number', 'Date', 'RegExp', 'Error'];
 	var iteratee = function(name) {
 		np["is" + name] = function(obj) {
 			return toString.call(obj) == "[object " + name + "]";
@@ -227,9 +232,10 @@
 		iteratee(typeArray[idx]);
 	}
 
-	// Chrome 12和Safari 5及各自之前的版本下，typeof对正则表达式返回function
+	// 截止至Chrome 12和Safari 5及各自之前的版本下，typeof对正则表达式返回function
 	// IE 8及之前的版本下，所有Function类型均被typeof识别为Object（因JScript独立于浏览器以外）
-	// Chrome 12+、Safari 5+、IE 9+
+	// Chrome、Safari、IE 9+
+	// 效率更高
 	if(typeof /./ != "function" && typeof Int8Array != "object") {
 		np.isFunction = function(func) {
 			return typeof func === "function" || false;
@@ -247,5 +253,62 @@
 		return typeof(obj) === "object" && !!obj;
 	}
 
+	// node : 元素节点
+	// name : 想获取的dataset的某一个名称
+	// GAFlag : 直接使用getAttribute
+	// IE 5+
+	// getAttribute的性能比dataset性能好
+	np.getDatasetOf = function(node, name, GAFlag) {
+		if(!node.nodeType || !np.isString(name))	return null;
 
+		if(GAFlag)	return node.getAttribute("data" + name);
+
+		var result = null;
+
+		if(node.dataset) {
+			var arrangeArray = name.split("-");
+			var arrangeName = "";
+
+			for(var idx=arrangeArray.length-1;idx>1;idx--) {
+				arrangeArray[idx] = arrangeArray[idx].substring(0,1).toUpperCase() +
+									arrangeArray[idx].substring(1);
+			}
+
+			arrangeName = arrangeArray.join("");
+			result = node.dataset[arrangeName];
+		}else {
+			result = node.getAttribute("data-" + name);
+		}
+
+		return result;
+	}
+
+	// context : 上下文
+	// func : 执行函数
+	// maxCount : 测试次数
+	// timeNick : 控制台对应测试时间名称
+	// restArgs1 : 剩余参数1
+	// restArgs2 : 剩余参数2
+	// runWithTime用于对func函数进行maxCount次的性能测试
+	np.runWithTime = function(context, func, maxCount, timeNick, restArgs1, restArgs2) {
+		if(func == null)	throw new Error("No function to runWithTime!");
+
+		context == null ? context = root : context = context;
+
+		var args = [];
+		for(var i=arguments.length-1;i>=4;i--) {
+			if(restArgs2 == null && np.isArray(restArgs1)) {
+				args = restArgs1;
+				break;
+			}
+			args.push(arguments[i]);
+		}
+		args.reverse();
+
+		console.time(timeNick);
+		for(var idx=maxCount-1;idx>=0;idx--) {
+			func.apply(context, args);
+		}
+		console.timeEnd(timeNick);
+	}
 })();
