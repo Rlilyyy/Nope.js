@@ -253,6 +253,23 @@
 		return typeof(obj) === "object" && !!obj;
 	}
 
+	// dataset数据规范
+	var arrangeData = function(name) {
+		if(!np.isString(name))	return null;
+
+		var arrangeArray = name.split("-");
+		var arrangeName = "";
+
+		for(var idx=arrangeArray.length-1;idx>=1;idx--) {
+			arrangeArray[idx] = arrangeArray[idx].substring(0,1).toUpperCase() +
+								arrangeArray[idx].substring(1);
+		}
+
+		arrangeName = arrangeArray.join("");
+
+		return arrangeName;
+	}
+
 	// node : 元素节点
 	// name : 想获取的dataset的某一个名称
 	// GAFlag : 直接使用getAttribute
@@ -261,23 +278,37 @@
 	np.getDatasetOf = function(node, name, GAFlag) {
 		if(!node.nodeType || !np.isString(name))	return null;
 
-		if(GAFlag)	return node.getAttribute("data" + name);
+		if(GAFlag === true)	return node.getAttribute("data" + name);
 
 		var result = null;
 
 		if(node.dataset) {
-			var arrangeArray = name.split("-");
-			var arrangeName = "";
-
-			for(var idx=arrangeArray.length-1;idx>1;idx--) {
-				arrangeArray[idx] = arrangeArray[idx].substring(0,1).toUpperCase() +
-									arrangeArray[idx].substring(1);
-			}
-
-			arrangeName = arrangeArray.join("");
-			result = node.dataset[arrangeName];
+			result = node.dataset[arrangeData(name)];
 		}else {
 			result = node.getAttribute("data-" + name);
+		}
+
+		return result;
+	}
+
+	// 获取node的dataset集合
+	np.getDataset = function(node) {
+		if(!node.nodeType)	return null;
+
+		var result = {};
+
+		if(node.dataset) {
+			result = node.dataset;
+		}else {
+			var attributes = node.attributes;
+
+			for(var idx=attributes.length-1;idx>=0;idx--) {
+				var attribute = attributes[idx].name;
+				if(attribute.indexOf("data-") >= 0) {
+					attribute = attribute.substring(attribute.indexOf("-")+1);
+					result[arrangeData(attribute)] = attributes[idx].value;
+				}
+			}
 		}
 
 		return result;
