@@ -29,6 +29,9 @@
 		hasOwnProperty = Object.hasOwnProperty;
 
 	var
+		join = Array.prototype.join;
+
+	var
 		ElementTravelSupport = ("firstElementChild" in document),
 		classListSupport = ("classList" in document.body),
 		DOM2EventSupport = ("addEventListener" in document.body);
@@ -310,5 +313,18 @@
 			func.apply(context, args);
 		}
 		console.timeEnd(timeNick);
+	}
+
+	// 控制台打印
+	np.log = function() {
+		try {
+			console.log.apply(console, arguments);
+		} catch (e) {
+			try {
+				opera.postError.apply(opera, arguments);
+			} catch (e) {
+				alert(join.call(arguments, " "))
+			}
+		}
 	}
 })();
