@@ -34,7 +34,8 @@
 	var
 		ElementTravelSupport = ("firstElementChild" in document),
 		classListSupport = ("classList" in document.body),
-		DOM2EventSupport = ("addEventListener" in document.body);
+		DOM2EventSupport = ("addEventListener" in document.body),
+		IEEventSupport = ("attachEvent" in document);
 
 	// 浅复制一个对象
 	np.simpleCopy = function(obj) {
@@ -170,6 +171,11 @@
 	np.addEventListener = function(node, type, handler) {
 		if(DOM2EventSupport) {
 			node.addEventListener(type, handler, false);
+		}else if(IEEventSupport) {
+			// 使用call解决IE8-下attachEvent的上下文一直为window的"bug"
+			node.attachEvent("on" + type, function(event) {
+				handler.call(node, event);
+			});
 		}else {
 			// eventQuene为事件队列
 			if(np.isFunction(node["on" + type]) && np.isObjectOfStrict(node["on" + type].eventQuene)) {
