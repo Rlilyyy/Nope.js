@@ -70,6 +70,7 @@
 
 	// 获取节点的第一个元素节点
 	np.firstElement = function(parentNode) {
+		this == np ? parentNode = parentNode : parentNode = this[0];
 
 		if(ElementTravelSupport) {
 			// IE 9+, FireFox 3.5+, Safari 4+, Chrome, Opera 10+
@@ -86,6 +87,7 @@
 
 	// 获取节点的最后一个元素节点
 	np.lastElement = function(parentNode) {
+		this == np ? parentNode = parentNode : parentNode = this[0];
 
 		if(ElementTravelSupport) {
 			// IE 9+, FireFox 3.5+, Safari 4+, Chrome, Opera 10+
@@ -168,7 +170,7 @@
 	}
 
 	// 事件监听添加
-	np.addEventListener = function(node, type, handler) {
+	np.addEventListener = np.on = function(node, type, handler) {
 		if(DOM2EventSupport) {
 			node.addEventListener(type, handler, false);
 		}else if(IEEventSupport) {
@@ -196,9 +198,11 @@
 	}
 
 	// 事件监听删除
-	np.removeEventListener = function(node, type, handler) {
+	np.removeEventListener = np.rm = function(node, type, handler) {
 		if(DOM2EventSupport) {
 			node.removeEventListener(type, handler, false);
+		}else if(IEEventSupport) {
+			node.detachEvent("on" + type, handler);
 		}else {
 			if(np.isFunction(node["on" + type]))
 				delete node["on" + type].eventQuene[handler];
