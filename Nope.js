@@ -327,6 +327,134 @@
 		return result;
 	}
 
+	// 排序基本算法，留待后用
+	np.SORT = {
+		// 选择排序
+		// 时间复杂度O(n^2)
+		Selection_sort: function(compare) {
+			var length = compare.length;
+			for(var i=0;i<length;i++) {
+				var min = i;
+				for(var j=i+1;j<length;j++) {
+					if(compare[j] < compare[min]) {
+						min = j;
+					}
+				}
+				var temp = compare[i];
+				compare[i] = compare[min];
+				compare[min] = temp;
+			}
+
+			return compare;
+		},
+
+		// 插入排序
+		// 最优复杂度：当输入数组就是排好序的时候，复杂度为O(n)
+		// 最差复杂度：当输入数组为倒序时，复杂度为O(n^2)
+		Insert_sort: function(compare) {
+			var length = compare.length;
+			for(var i=1;i<length;i++) {
+				for(var j=i;j>0;j--) {
+					if(compare[j] < compare[j-1]) {
+						var temp = compare[j];
+						compare[j] = compare[j-1];
+						compare[j-1] = temp;
+					} else {
+						break;
+					}
+				}
+			}
+			return compare;
+		},
+
+		// 冒泡排序
+		// 时间复杂度最好是O(n)，最坏是O(n^2)，O(n)的实现需要改进代码
+		Bubble_sort: function(compare) {
+			var length = compare.length;
+			for(var i=length;i>0;i--) {
+				for(var j=0;j<i-1;j++) {
+					if(compare[j] > compare[j+1]) {
+						var temp = compare[j];
+						compare[j] = compare[j+1];
+						compare[j+1] = temp;
+					}
+				}
+			}
+
+			return compare;
+		},
+
+		// 归并排序
+		// O(nlgn)
+		Merge_sort: function(compare) {
+			function　merge(left, right){
+				var　result=[];
+				while(left.length>0 && right.length>0){
+					if(left[0]<right[0]){
+						result.push(left.shift());
+					}else{
+						result.push(right.shift());
+					}
+				}
+				return　result.concat(left).concat(right);
+			}
+			function　mergeSort(items){
+				if(items.length == 1){
+					return　items;
+				}
+				var　middle = Math.floor(items.length/2),
+					left = items.slice(0, middle),
+					right = items.slice(middle);
+					return　merge(mergeSort(left), mergeSort(right));
+			}
+
+			return mergeSort(compare)
+		},
+
+		// 快速排序
+		// 当输入数组已排序时，时间为O(n^2)
+		// 最好是O(nlgn)
+		Quick_sort: function(compare) {
+			function quick_sort(compare, left, right) {
+				if(left >= right)   return;
+				var flag = compare[left];
+				var i = left, j=right;
+				while(i != j) {
+					while(i != j && compare[j] >= flag) {
+						j--;
+					}
+					compare[i] = compare[j];
+					while(i != j && compare[i] <= flag) {
+						i++;
+					}
+					compare[j] = compare[i];
+				}
+				compare[i] = flag;
+				quick_sort(compare, left, i-1);
+				quick_sort(compare, i+1, right);
+			}
+
+			quick_sort(compare, 0, compare.length-1);
+			return compare;
+		},
+
+		// 希尔排序
+		// O(nlogn) O(ns) 1<s<2 不稳定 O(1) s是所选分组
+		Shell_sort: function(compare) {
+			var length = compare.length;
+			for(var d=Math.floor(length / 2);d>0;d=Math.floor(d/2)){
+				for(var i=d;i<length;i++){
+					for(var j=i-d;j>=0 && compare[j]>compare[d+j];j-=d){
+						var temp=compare[j];
+						compare[j]=compare[d+j];
+						compare[d+j]=temp;
+					}
+				}
+			}
+			return compare;
+		}
+	}
+
 	// context : 上下文
 	// func : 执行函数
 	// maxCount : 测试次数
