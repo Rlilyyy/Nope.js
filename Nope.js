@@ -113,7 +113,7 @@
 
 	// 获取childNode的前一个兄弟元素节点
 	// 所有主流浏览器，包括IE 6+
-	np.previousElementSibling = function(childNode) {
+	np.previousElementSibling = np.preElem = function(childNode) {
 
 		if(ElementTravelSupport) {
 			// IE 9+, FireFox 3.5+, Safari 4+, Chrome, Opera 10+
@@ -132,7 +132,7 @@
 
 	// 获取childNode的下一个兄弟元素节点
 	// 所有主流浏览器，包括IE 6+
-	np.nextElementSibling = function(childNode) {
+	np.nextElementSibling = np.nextElem = function(childNode) {
 
 		if(ElementTravelSupport) {
 			// IE 9+, FireFox 3.5+, Safari 4+, Chrome, Opera 10+
