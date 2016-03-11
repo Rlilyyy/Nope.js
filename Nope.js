@@ -49,7 +49,7 @@
 		}
 
 		return result;
-	}
+	};
 
 	// 深复制一个对象
 	np.deepCopy = function(obj) {
@@ -66,7 +66,7 @@
 		}
 
 		return result;
-	}
+	};
 
 	// 获取节点的第一个元素节点
 	np.firstElement = function(parentNode) {
@@ -83,7 +83,7 @@
 					return childNodes[i];
 			}
 		}
-	}
+	};
 
 	// 获取节点的最后一个元素节点
 	np.lastElement = function(parentNode) {
@@ -100,16 +100,16 @@
 					return childNodes[i];
 			}
 		}
-	}
+	};
 
 	// 判断property是object的原型的属性而非构造函数的属性
 	np.hasPrototypeProperty = function(object, property) {
 		return !hasOwnProperty.call(object, property) && (property in object);
-	}
+	};
 
 	np.hasConstructorProperty = function(object, property) {
 		return hasOwnProperty.call(object, property) && !!object;
-	}
+	};
 
 	// 获取childNode的前一个兄弟元素节点
 	// 所有主流浏览器，包括IE 6+
@@ -128,7 +128,7 @@
 
 			return previousSibling;
 		}
-	}
+	};
 
 	// 获取childNode的下一个兄弟元素节点
 	// 所有主流浏览器，包括IE 6+
@@ -147,7 +147,7 @@
 
 			return nextSibling;
 		}
-	}
+	};
 
 	// 删除node的className类
 	np.removeClass = function(node, className) {
@@ -167,7 +167,7 @@
 				}
 			}
 		}
-	}
+	};
 
 	// 事件监听添加
 	np.addEventListener = np.on = function(node, type, handler) {
@@ -190,12 +190,12 @@
 					for(var idx in this["on" + type].eventQuene) {
 						this["on" + type].eventQuene[idx]();
 					}
-				}
+				};
 			}else {
 				throw new Error("node is no an element");
 			}
 		}
-	}
+	};
 
 	// 事件监听删除
 	np.removeEventListener = np.rm = function(node, type, handler) {
@@ -207,21 +207,21 @@
 			if(np.isFunction(node["on" + type]))
 				delete node["on" + type].eventQuene[handler];
 		}
-	}
+	};
 
 	// 所有主流浏览器，对于documentElement和body的不同，根据compatMode，由使用者自己鉴定传入值
 	np.scrollToBottom = function(node) {
 		node.scrollTop = node.scrollHeight;
-	}
+	};
 
 	// 所有主流浏览器
 	np.scrollToTop = function(node) {
 		node.scrollTop = 0;
-	}
+	};
 
 	np.each = function(obj, iteratee, context) {
 
-	}
+	};
 
 	np.allKeys = function(obj) {
 		if(!np.isObject(obj))	return [];
@@ -230,7 +230,7 @@
 		for(var key in obj)	keys.push(key);
 
 		return keys;
-	}
+	};
 
 	// isArguments, isFunction, isString, isNumber, isDate, isRegExp, isError函数
 	// isFunction在IE8-下仍会有错误，一些核心的函数例如document.getElementById会被认为是Object
@@ -239,8 +239,8 @@
 	var iteratee = function(name) {
 		np["is" + name] = function(obj) {
 			return toString.call(obj) == "[object " + name + "]";
-		}
-	}
+		};
+	};
 	for(var idx in typeArray) {
 		iteratee(typeArray[idx]);
 	}
@@ -258,13 +258,13 @@
 	// 对Function和Object都认为是Object
 	np.isObject = function(obj) {
 		return np.isFunction(obj) || np.isObjectOfStrict(obj);
-	}
+	};
 
 	// Function不再是Object
 	np.isObjectOfStrict = function(obj) {
 		// null也为Object
 		return typeof(obj) === "object" && !!obj;
-	}
+	};
 
 	// dataset数据规范
 	var arrangeData = function(name) {
@@ -281,7 +281,7 @@
 		arrangeName = arrangeArray.join("");
 
 		return arrangeName;
-	}
+	};
 
 	// node : 元素节点
 	// name : 想获取的dataset的某一个名称
@@ -302,7 +302,7 @@
 		}
 
 		return result;
-	}
+	};
 
 	// 获取node的dataset集合
 	np.getDataset = function(node) {
@@ -325,7 +325,7 @@
 		}
 
 		return result;
-	}
+	};
 
 	// 排序基本算法，留待后用
 	np.SORT = {
@@ -453,7 +453,7 @@
 			}
 			return compare;
 		}
-	}
+	};
 
 	// context : 上下文
 	// func : 执行函数
@@ -482,7 +482,7 @@
 			func.apply(context, args);
 		}
 		console.timeEnd(timeNick);
-	}
+	};
 
 	// 控制台打印
 	np.log = function() {
@@ -492,8 +492,8 @@
 			try {
 				opera.postError.apply(opera, arguments);
 			} catch (e) {
-				alert(join.call(arguments, " "))
+				alert(join.call(arguments, " "));
 			}
 		}
-	}
+	};
 })();
