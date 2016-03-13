@@ -496,4 +496,51 @@
 			}
 		}
 	};
+
+	// 提供同步与异步测试的函数
+	// 来自《JavaScript 忍者秘籍》
+	// 需要配合 unit.css 和 <ul id="results"></ul>
+	// 使用方法与 QUnit 类似，本书就是 JQuery 之父 John Resig 所写
+	(function() {
+		var quene = [], paused = false, results;
+		np.test = function(name, fn) {
+
+			quene.push(function() {
+				results = document.getElementById("results");
+				results = np.assert(true, name).appendChild(document.createElement("ul"));
+				fn();
+			});
+			runTest();
+		};
+
+		np.pause = function() {
+			paused = true;
+		};
+
+		np.resume = function() {
+			paused = false;
+			setTimeout(runTest, 1);
+		};
+
+		function runTest() {
+			if(!paused && quene.length) {
+				quene.shift()();
+				if(!paused) {
+					resume();
+				}
+			}
+		}
+
+		np.assert = function assert(value, desc) {
+			var li = document.createElement("li");
+			li.className = value ? "pass" : "fail";
+			li.appendChild(document.createTextNode(desc));
+			results.appendChild(li);
+			if(!value) {
+				li.parentNode.parentNode.className = "fail";
+			}
+
+			return li;
+		};
+	})();
 })();
