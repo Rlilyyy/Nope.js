@@ -18,7 +18,7 @@
                         np.assert(true, "Async test 1");
                     }, 1000);
                     setTimeout(function() {
-                        np.assert(true, "Async test 2");
+                        np.assert(false, "Async test 2");
                         np.resume();
                     }, 1500);
                     np.assert(true, "1st test");

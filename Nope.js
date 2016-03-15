@@ -18,10 +18,6 @@
 		return result;
 	};
 
-	typeof exports != "undefined" && !exports.nodeType ?
-			(typeof module != "undefined" && !module.nodeType && module.exports != null ?
-				exports = module.exports = np : exports.np = np) : root.np = np;
-
 	var
 		nativeCreate = Object.create,
 		ObjProto = Object.prototype,
@@ -102,7 +98,7 @@
 		}
 	};
 
-	// 判断property是object的原型的属性而非构造函数的属性
+	// 判断 property 是 object 的原型的属性而非构造函数的属性
 	np.hasPrototypeProperty = function(object, property) {
 		return !hasOwnProperty.call(object, property) && (property in object);
 	};
@@ -111,8 +107,8 @@
 		return hasOwnProperty.call(object, property) && !!object;
 	};
 
-	// 获取childNode的前一个兄弟元素节点
-	// 所有主流浏览器，包括IE 6+
+	// 获取 childNode 的前一个兄弟元素节点
+	// 所有主流浏览器，包括 IE 6+
 	np.previousElementSibling = np.preElem = function(childNode) {
 
 		if(ElementTravelSupport) {
@@ -130,8 +126,8 @@
 		}
 	};
 
-	// 获取childNode的下一个兄弟元素节点
-	// 所有主流浏览器，包括IE 6+
+	// 获取 childNode 的下一个兄弟元素节点
+	// 所有主流浏览器，包括 IE 6+
 	np.nextElementSibling = np.nextElem = function(childNode) {
 
 		if(ElementTravelSupport) {
@@ -149,7 +145,7 @@
 		}
 	};
 
-	// 删除node的className类
+	// 删除 node 的 className 类
 	np.removeClass = function(node, className) {
 
 		if(classListSupport) {
@@ -174,7 +170,7 @@
 		if(DOM2EventSupport) {
 			node.addEventListener(type, handler, false);
 		}else if(IEEventSupport) {
-			// 使用call解决IE8-下attachEvent的上下文一直为window的"bug"
+			// 使用 call 解决 IE8- 下 attachEvent 的上下文一直为 window 的 "bug"
 			node.attachEvent("on" + type, function(event) {
 				handler.call(node, event);
 			});
@@ -209,7 +205,7 @@
 		}
 	};
 
-	// 所有主流浏览器，对于documentElement和body的不同，根据compatMode，由使用者自己鉴定传入值
+	// 所有主流浏览器，对于 documentElement 和 body 的不同，根据 compatMode，由使用者自己鉴定传入值
 	np.scrollToBottom = function(node) {
 		node.scrollTop = node.scrollHeight;
 	};
@@ -233,8 +229,8 @@
 	};
 
 	// isArguments, isFunction, isString, isNumber, isDate, isRegExp, isError函数
-	// isFunction在IE8-下仍会有错误，一些核心的函数例如document.getElementById会被认为是Object
-	// 任何以COM对象构造的函数都将被IE识别为Object，无论哪种判断方法
+	// isFunction 在 IE8- 下仍会有错误，一些核心的函数例如 document.getElementById 会被认为是 Object
+	// 任何以 COM 对象构造的函数都将被 IE 识别为 Object，无论哪种判断方法
 	var typeArray = ['Arguments', 'Function', 'Array', 'String', 'Number', 'Date', 'RegExp', 'Error'];
 	var iteratee = function(name) {
 		np["is" + name] = function(obj) {
@@ -245,8 +241,8 @@
 		iteratee(typeArray[idx]);
 	}
 
-	// 截止至Chrome 12和Safari 5及各自之前的版本下，typeof对正则表达式返回function
-	// IE 8及之前的版本下，所有Function类型均被typeof识别为Object（因JScript独立于浏览器以外）
+	// 截止至 Chrome 12 和 Safari 5 及各自之前的版本下，typeof 对正则表达式返回 function
+	// IE 8 及之前的版本下，所有 Function 类型均被 typeof 识别为 Object（因 JScript 独立于浏览器以外）
 	// Chrome、Safari、IE 9+
 	// 效率更高
 	if(typeof /./ != "function" && typeof Int8Array != "object") {
@@ -255,18 +251,18 @@
 		}
 	}
 
-	// 对Function和Object都认为是Object
+	// 对 Function 和 Object 都认为是 Object
 	np.isObject = function(obj) {
 		return np.isFunction(obj) || np.isObjectOfStrict(obj);
 	};
 
-	// Function不再是Object
+	// Function 不再是 Object
 	np.isObjectOfStrict = function(obj) {
 		// null也为Object
 		return typeof(obj) === "object" && !!obj;
 	};
 
-	// dataset数据规范
+	// dataset 数据规范
 	var arrangeData = function(name) {
 		if(!np.isString(name))	return null;
 
@@ -543,4 +539,15 @@
 			return li;
 		};
 	})();
+
+	// 如果页面中引入了 require.js，默认模块化，则不暴露对象给全局变量。
+	if(np.isFunction(define)) {
+		define("Nope", function() {
+			return np;
+		});
+	}else {
+		typeof exports != "undefined" && !exports.nodeType ?
+				(typeof module != "undefined" && !module.nodeType && module.exports != null ?
+					exports = module.exports = np : exports.np = np) : root.np = np;
+	}
 })();
