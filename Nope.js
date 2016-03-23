@@ -34,7 +34,7 @@
 		IEEventSupport = ("attachEvent" in document);
 
 	// 浅复制一个对象
-	np.simpleCopy = function(obj) {
+	np.simpleCopy = np.copy = function(obj) {
 
 		if(!np.isObjectOfStrict(obj))  return obj;
 
@@ -48,9 +48,9 @@
 	};
 
 	// 深复制一个对象
-	np.deepCopy = function(obj) {
+	np.deepCopy = np.clone = function(obj) {
 
-		var result = {};
+		var result = np.isArray(obj) ? []:{};
 
 		for(var idx in obj) {
 
@@ -541,7 +541,7 @@
 	})();
 
 	// 如果页面中引入了 require.js，默认模块化，则不暴露对象给全局变量。
-	if(np.isFunction(define)) {
+	if(typeof define != "undefined" && np.isFunction(define)) {
 		define("Nope", function() {
 			return np;
 		});
