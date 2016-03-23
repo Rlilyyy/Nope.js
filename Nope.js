@@ -324,7 +324,7 @@
 	};
 
 	// 排序基本算法，留待后用
-	np.SORT = {
+	SORT = {
 		// 选择排序
 		// 时间复杂度O(n^2)
 		Selection_sort: function(compare) {
