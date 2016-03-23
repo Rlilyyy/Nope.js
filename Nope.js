@@ -451,6 +451,65 @@
 		}
 	};
 
+	// ajax 请求
+	// type: "GET"/"POST"
+	// url: target request address
+	// data: the data of "POST"
+	// success: successed callback
+	// error: failed callback
+	// async: true/false
+	// timeout: set the max time of the request
+	// ontimeout: the timeout event
+	np.ajax = function() {
+		var pkg = np.isObjectOfStrict(arguments[0]) ? arguments[0] : null;
+
+		if(pkg !== null) {
+			var xhr = null;
+			if(window.XMLHttpRequest) {
+				xhr = new XMLHttpRequest();
+			}else if(window.ActiveXObject) {
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");
+			}else {
+				throw new Error("Your brower do not support XMLHttpRequest or ActiveXObject, please update your brower");
+			}
+
+			if(xhr !== null) {
+				xhr.onreadystatechange = function() {
+					if(this.readyState == 4) {
+						if(this.status >= 200 && this.status < 300 && np.isFunction(pkg.success) || this.status === 304) {
+							pkg.success.call(this, this.responseText, this.status);
+						}else if(np.isFunction(pkg.error) && this.status !== 0) {
+							pkg.error.call(this, this.status);
+						}
+					}
+				}
+				// 浏览器可能拒绝同步请求
+				xhr.open(pkg.type, pkg.url, typeof pkg.async == "undefined" ? false : pkg.async);
+
+				if(pkg.async) {
+					xhr.timeout = pkg.timeout || 88888;
+					xhr.ontimeout = pkg.ontimeout;
+				}else {
+					setTimeout(function() {
+						xhr.abort();
+						pkg.ontimeout.call(xhr);
+					}, xhr.timeout);
+				}
+
+				if(pkg.type.toLocaleUpperCase() == "GET") {
+					xhr.send(null);
+				}else if(pkg.type.toLocaleUpperCase() == "POST") {
+					xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+					xhr.send(pkg.data);
+				}else {
+					throw new Error("Sorry, np.ajax() only support 'GET' and 'POST'");
+				}
+			}
+		}else {
+			return false;
+		}
+	};
+
 	// context : 上下文
 	// func : 执行函数
 	// maxCount : 测试次数
