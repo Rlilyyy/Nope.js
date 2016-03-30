@@ -451,15 +451,15 @@
 		}
 	};
 
-	// ajax 请求
-	// type: "GET"/"POST"
-	// url: target request address
-	// data: the data of "POST"
-	// success: successed callback
-	// error: failed callback
-	// async: true/false
-	// timeout: set the max time of the request
-	// ontimeout: the timeout event
+	// desc: ajax 请求
+	// @param type {String} "GET"/"POST"
+	// @param url {String} target request address
+	// @param data {String} the data of "POST"
+	// @param success {Function} successed callback
+	// @param error {Function} failed callback
+	// @param async {Boolean} true/false
+	// @param timeout {Number} set the max time of the request
+	// @param ontimeout {Function} the timeout event
 	np.ajax = function() {
 		var pkg = np.isObjectOfStrict(arguments[0]) ? arguments[0] : null;
 
@@ -507,6 +507,77 @@
 			}
 		}else {
 			return false;
+		}
+	};
+
+	ES6
+	np.is32Bit = function(code) {
+		return code.codePointAt(0) > 0xFFFF;
+	};
+
+	np.is32BitStr = function(str) {
+		for(var key in str) {
+			if(np.is32Bit(str[key]))	return true;
+		}
+		return false;
+	};
+
+	np.at = function(str, position) {
+		var count = 0;
+		for(var value of str) {
+			if(count === position)	return value;
+			++count;
+		}
+	};
+
+	np.charAt = function(str, position) {
+		str += "";
+		return str.charAt(position);
+	};
+
+	np.exchange = np.ex =  function([x, y]) {
+		[x, y] = [y, x];
+		return [x, y];
+	};
+
+	np.startsWith = function(str, judgeStr, startIndex) {
+		str += "";
+		judgeStr += "";
+
+		!!startIndex ? startIndex = startIndex : startIndex = 0;
+
+		if(!!str.startsWith) {
+			return str.startsWith(judgeStr, startIndex);
+		}else {
+			var index = str.indexOf(judgeStr, startIndex);
+			return index !== -1 && index === startIndex;
+		}
+	};
+
+	np.endsWith = function(str, judgeStr, startIndex) {
+		str += "";
+		judgeStr += "";
+
+		!!startIndex ? startIndex = startIndex : startIndex = 0;
+
+		if(!!str.startsWith) {
+			return str.endsWith(judgeStr, startIndex);
+		}else {
+			var index = str.lastIndexOf(judgeStr, startIndex);
+			return index !== -1 && (index + judgeStr.length === startIndex);
+		}
+	};
+
+	np.includes = function(str, judgeStr, startIndex) {
+		str += "";
+		judgeStr += "";
+
+		!!startIndex ? startIndex = startIndex : startIndex = 0;
+
+		if(!!str.includes) {
+			return str.includes(judgeStr, startIndex);
+		}else {
+			return str.indexOf(judgeStr, startIndex) !== -1;
 		}
 	};
 
