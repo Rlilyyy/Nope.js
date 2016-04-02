@@ -510,76 +510,76 @@
 		}
 	};
 
-	ES6
-	np.is32Bit = function(code) {
-		return code.codePointAt(0) > 0xFFFF;
-	};
-
-	np.is32BitStr = function(str) {
-		for(var key in str) {
-			if(np.is32Bit(str[key]))	return true;
-		}
-		return false;
-	};
-
-	np.at = function(str, position) {
-		var count = 0;
-		for(var value of str) {
-			if(count === position)	return value;
-			++count;
-		}
-	};
-
-	np.charAt = function(str, position) {
-		str += "";
-		return str.charAt(position);
-	};
-
-	np.exchange = np.ex =  function([x, y]) {
-		[x, y] = [y, x];
-		return [x, y];
-	};
-
-	np.startsWith = function(str, judgeStr, startIndex) {
-		str += "";
-		judgeStr += "";
-
-		!!startIndex ? startIndex = startIndex : startIndex = 0;
-
-		if(!!str.startsWith) {
-			return str.startsWith(judgeStr, startIndex);
-		}else {
-			var index = str.indexOf(judgeStr, startIndex);
-			return index !== -1 && index === startIndex;
-		}
-	};
-
-	np.endsWith = function(str, judgeStr, startIndex) {
-		str += "";
-		judgeStr += "";
-
-		!!startIndex ? startIndex = startIndex : startIndex = 0;
-
-		if(!!str.startsWith) {
-			return str.endsWith(judgeStr, startIndex);
-		}else {
-			var index = str.lastIndexOf(judgeStr, startIndex);
-			return index !== -1 && (index + judgeStr.length === startIndex);
-		}
-	};
-
-	np.includes = function(str, judgeStr, startIndex) {
-		str += "";
-		judgeStr += "";
-
-		!!startIndex ? startIndex = startIndex : startIndex = 0;
-
-		if(!!str.includes) {
-			return str.includes(judgeStr, startIndex);
-		}else {
-			return str.indexOf(judgeStr, startIndex) !== -1;
-		}
-	};
+	// ES6
+	// np.is32Bit = function(code) {
+	// 	return code.codePointAt(0) > 0xFFFF;
+	// };
+	//
+	// np.is32BitStr = function(str) {
+	// 	for(var key in str) {
+	// 		if(np.is32Bit(str[key]))	return true;
+	// 	}
+	// 	return false;
+	// };
+	//
+	// np.at = function(str, position) {
+	// 	var count = 0;
+	// 	for(var value of str) {
+	// 		if(count === position)	return value;
+	// 		++count;
+	// 	}
+	// };
+	//
+	// np.charAt = function(str, position) {
+	// 	str += "";
+	// 	return str.charAt(position);
+	// };
+	//
+	// np.exchange = np.ex =  function([x, y]) {
+	// 	[x, y] = [y, x];
+	// 	return [x, y];
+	// };
+	//
+	// np.startsWith = function(str, judgeStr, startIndex) {
+	// 	str += "";
+	// 	judgeStr += "";
+	//
+	// 	!!startIndex ? startIndex = startIndex : startIndex = 0;
+	//
+	// 	if(!!str.startsWith) {
+	// 		return str.startsWith(judgeStr, startIndex);
+	// 	}else {
+	// 		var index = str.indexOf(judgeStr, startIndex);
+	// 		return index !== -1 && index === startIndex;
+	// 	}
+	// };
+	//
+	// np.endsWith = function(str, judgeStr, startIndex) {
+	// 	str += "";
+	// 	judgeStr += "";
+	//
+	// 	!!startIndex ? startIndex = startIndex : startIndex = 0;
+	//
+	// 	if(!!str.startsWith) {
+	// 		return str.endsWith(judgeStr, startIndex);
+	// 	}else {
+	// 		var index = str.lastIndexOf(judgeStr, startIndex);
+	// 		return index !== -1 && (index + judgeStr.length === startIndex);
+	// 	}
+	// };
+	//
+	// np.includes = function(str, judgeStr, startIndex) {
+	// 	str += "";
+	// 	judgeStr += "";
+	//
+	// 	!!startIndex ? startIndex = startIndex : startIndex = 0;
+	//
+	// 	if(!!str.includes) {
+	// 		return str.includes(judgeStr, startIndex);
+	// 	}else {
+	// 		return str.indexOf(judgeStr, startIndex) !== -1;
+	// 	}
+	// };
 
 	// context : 上下文
 	// func : 执行函数
