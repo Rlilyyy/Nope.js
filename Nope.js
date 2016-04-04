@@ -54,11 +54,11 @@
 
 		for(var idx in obj) {
 
-			typeof(obj[idx]) == "object"?
+			result[idx] = typeof(obj[idx]) === "object"?
 
-				result[idx] = np.deepCopy(obj[idx]):
+				np.deepCopy(obj[idx]):
 
-				result[idx] = obj[idx];
+				obj[idx];
 		}
 
 		return result;
@@ -66,7 +66,7 @@
 
 	// 获取节点的第一个元素节点
 	np.firstElement = function(parentNode) {
-		this == np ? parentNode = parentNode : parentNode = this[0];
+		parentNode = this == np ? parentNode : this[0];
 
 		if(ElementTravelSupport) {
 			// IE 9+, FireFox 3.5+, Safari 4+, Chrome, Opera 10+
@@ -83,7 +83,7 @@
 
 	// 获取节点的最后一个元素节点
 	np.lastElement = function(parentNode) {
-		this == np ? parentNode = parentNode : parentNode = this[0];
+		parentNode = this == np ? parentNode : this[0];
 
 		if(ElementTravelSupport) {
 			// IE 9+, FireFox 3.5+, Safari 4+, Chrome, Opera 10+
@@ -248,7 +248,7 @@
 	if(typeof /./ != "function" && typeof Int8Array != "object") {
 		np.isFunction = function(func) {
 			return typeof func === "function" || false;
-		}
+		};
 	}
 
 	// 对 Function 和 Object 都认为是 Object
@@ -404,7 +404,7 @@
 					return　merge(mergeSort(left), mergeSort(right));
 			}
 
-			return mergeSort(compare)
+			return mergeSort(compare);
 		},
 
 		// 快速排序
@@ -482,7 +482,7 @@
 							pkg.error.call(this, this.status);
 						}
 					}
-				}
+				};
 				// 浏览器可能拒绝同步请求
 				xhr.open(pkg.type, pkg.url, typeof pkg.async == "undefined" ? false : pkg.async);
 
@@ -589,13 +589,13 @@
 	// restArgs2 : 剩余参数2
 	// runWithTime用于对func函数进行maxCount次的性能测试
 	np.runWithTime = function(context, func, maxCount, timeNick, restArgs1, restArgs2) {
-		if(func == null)	throw new Error("No function to runWithTime!");
+		if(func === null)	throw new Error("No function to runWithTime!");
 
-		context == null ? context = root : context = context;
+		context = context === null ? root : context;
 
 		var args = [];
 		for(var i=arguments.length-1;i>=4;i--) {
-			if(restArgs2 == null && np.isArray(restArgs1)) {
+			if(restArgs2 === null && np.isArray(restArgs1)) {
 				args = restArgs1;
 				break;
 			}
@@ -676,8 +676,16 @@
 			return np;
 		});
 	}else {
-		typeof exports != "undefined" && !exports.nodeType ?
-				(typeof module != "undefined" && !module.nodeType && module.exports != null ?
-					exports = module.exports = np : exports.np = np) : root.np = np;
+		// typeof exports !== "undefined" && !exports.nodeType ?
+		// 		(typeof module !== "undefined" && !module.nodeType && module.exports !== null ?
+		// 			exports = module.exports = np : exports.np = np) : root.np = np;
+		if (typeof exports != 'undefined' && !exports.nodeType) {
+	      if (typeof module != 'undefined' && !module.nodeType && module.exports) {
+	        exports = module.exports = np;
+	      }
+	      exports.np = np;
+	    } else {
+	      root.np = np;
+	    }
 	}
 })();
